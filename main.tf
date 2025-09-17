@@ -190,17 +190,17 @@ resource "helm_release" "cluster_autoscaler" {
  set {
     name  = "autoDiscovery.clusterName"
     value = aws_eks_cluster.nousath.name
-  }
+  },
 
   set {
     name  = "awsRegion"
     value = "ap-south-1"
-  }
+  },
 
   set {
     name  = "rbac.create"
     value = "true"
-  }
+  },
 
   set {
     name  = "image.tag"
@@ -220,17 +220,17 @@ resource "helm_release" "aws_load_balancer_controller" {
  set {
     name  = "clusterName"
     value = aws_eks_cluster.nousath.name
-  }
+  },
 
   set {
     name  = "serviceAccount.create"
     value = "true"
-  }
+  },
 
   set {
     name  = "region"
     value = "ap-south-1"
-  }
+  },
 
   set {
     name  = "vpcId"
