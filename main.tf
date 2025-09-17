@@ -187,7 +187,8 @@ resource "helm_release" "cluster_autoscaler" {
   chart      = "cluster-autoscaler"
   namespace  = "kube-system"
 
- set {
+ set = [
+{
     name  = "autoDiscovery.clusterName"
     value = aws_eks_cluster.nousath.name
   },
@@ -206,6 +207,7 @@ resource "helm_release" "cluster_autoscaler" {
     name  = "image.tag"
     value = "v1.29.0"
   }
+]
 }
 
 
@@ -217,7 +219,8 @@ resource "helm_release" "aws_load_balancer_controller" {
   chart      = "aws-load-balancer-controller"
   version    = "1.6.2"
 
- set {
+ set = [
+{
     name  = "clusterName"
     value = aws_eks_cluster.nousath.name
   },
@@ -236,4 +239,5 @@ resource "helm_release" "aws_load_balancer_controller" {
     name  = "vpcId"
     value = aws_vpc.nousath_vpc.id
   }
+]
 }
