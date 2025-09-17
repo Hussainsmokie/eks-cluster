@@ -159,10 +159,15 @@ resource "aws_iam_role" "nousath_node_group_role" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "nousath_node_group_role_policy" {
+resource "aws_iam_role_policy_attachment" "worker_node_policy" {
   role       = aws_iam_role.nousath_node_group_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess
+}
+
+
+resource "aws_iam_role_policy_attachment" "autoscaling_policy" {
+  role       = aws_iam_role.nousath_node_group_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "nousath_node_group_cni_policy" {
