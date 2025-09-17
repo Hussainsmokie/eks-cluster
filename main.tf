@@ -162,6 +162,7 @@ EOF
 resource "aws_iam_role_policy_attachment" "devopsshack_node_group_role_policy" {
   role       = aws_iam_role.devopsshack_node_group_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess
 }
 
 resource "aws_iam_role_policy_attachment" "devopsshack_node_group_cni_policy" {
