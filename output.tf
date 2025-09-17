@@ -26,3 +26,13 @@ output "cluster_endpoint" {
 output "cluster_certificate_authority" {
   value = aws_eks_cluster.devopsshack.certificate_authority[0].data
 }
+
+
+output "cluster_autoscaler_iam_role_arn" {
+  value = aws_iam_role.cluster_autoscaler_irsa.arn
+}
+
+output "alb_controller_iam_role_arn" {
+  value = aws_iam_role.alb_controller_irsa.arn
+}
+
