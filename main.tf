@@ -187,29 +187,25 @@ resource "helm_release" "cluster_autoscaler" {
   chart      = "cluster-autoscaler"
   namespace  = "kube-system"
 
- set = [
-{
-    name  = "autoDiscovery.clusterName"
-    value = aws_eks_cluster.nousath.name
-  },
-
-  set {
-    name  = "awsRegion"
-    value = "ap-south-1"
-  },
-
-  set {
-    name  = "rbac.create"
-    value = "true"
-  },
-
-  set {
-    name  = "image.tag"
-    value = "v1.29.0"
-  }
-]
+  set = [
+    {
+      name  = "autoDiscovery.clusterName"
+      value = aws_eks_cluster.nousath.name
+    },
+    {
+      name  = "awsRegion"
+      value = "ap-south-1"
+    },
+    {
+      name  = "rbac.create"
+      value = "true"
+    },
+    {
+      name  = "image.tag"
+      value = "v1.29.0"
+    }
+  ]
 }
-
 
 
 resource "helm_release" "aws_load_balancer_controller" {
@@ -219,25 +215,22 @@ resource "helm_release" "aws_load_balancer_controller" {
   chart      = "aws-load-balancer-controller"
   version    = "1.6.2"
 
- set = [
-{
-    name  = "clusterName"
-    value = aws_eks_cluster.nousath.name
-  },
-
-  set {
-    name  = "serviceAccount.create"
-    value = "true"
-  },
-
-  set {
-    name  = "region"
-    value = "ap-south-1"
-  },
-
-  set {
-    name  = "vpcId"
-    value = aws_vpc.nousath_vpc.id
-  }
-]
+  set = [
+    {
+      name  = "clusterName"
+      value = aws_eks_cluster.nousath.name
+    },
+    {
+      name  = "serviceAccount.create"
+      value = "true"
+    },
+    {
+      name  = "region"
+      value = "ap-south-1"
+    },
+    {
+      name  = "vpcId"
+      value = aws_vpc.nousath_vpc.id
+    }
+  ]
 }
