@@ -236,3 +236,4 @@ resource "helm_release" "aws_load_balancer_controller" {
     name  = "vpcId"
     value = aws_vpc.nousath_vpc.id
   }
+}
