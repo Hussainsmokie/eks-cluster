@@ -217,13 +217,9 @@ resource "helm_release" "aws_load_balancer_controller" {
   chart      = "aws-load-balancer-controller"
   version    = "1.6.2"
 
-  set {
+ set {
     name  = "clusterName"
-<<<<<<< HEAD
     value = aws_eks_cluster.nousath.name
-=======
-    value = aws_eks_cluster.devopsshack.name
->>>>>>> 895f931403b2461f7d21e53526f63559da862d7b
   }
 
   set {
@@ -238,12 +234,5 @@ resource "helm_release" "aws_load_balancer_controller" {
 
   set {
     name  = "vpcId"
-<<<<<<< HEAD
     value = aws_vpc.nousath_vpc.id
   }
-}
-=======
-    value = aws_vpc.devopsshack_vpc.id
-  }
-}
->>>>>>> 895f931403b2461f7d21e53526f63559da862d7b
