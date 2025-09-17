@@ -173,3 +173,61 @@ resource "aws_iam_role_policy_attachment" "devopsshack_node_group_registry_polic
   role       = aws_iam_role.devopsshack_node_group_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
+
+
+resource "helm_release" "cluster_autoscaler" {
+  name       = "cluster-autoscaler"
+  repository = "https://kubernetes.github.io/autoscaler"
+  chart      = "cluster-autoscaler"
+  namespace  = "kube-system"
+
+  set {
+    name  = "autoDiscovery.clusterName"
+    value = aws_eks_cluster.devopsshack.name
+  }
+
+  set {
+    name  = "awsRegion"
+    value = "ap-south-1"
+  }
+
+  set {
+    name  = "rbac.create"
+    value = "true"
+  }
+
+  set {
+    name  = "image.tag"
+    value = "v1.29.0"
+  }
+}
+
+
+
+resource "helm_release" "aws_load_balancer_controller" {
+  name       = "aws-load-balancer-controller"
+  namespace  = "kube-system"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  version    = "1.6.2"
+
+  set {
+    name  = "clusterName"
+    value = aws_eks_cluster.devopsshack.name
+  }
+
+  set {
+    name  = "serviceAccount.create"
+    value = "true"
+  }
+
+  set {
+    name  = "region"
+    value = "ap-south-1"
+  }
+
+  set {
+    name  = "vpcId"
+    value = aws_vpc.devopsshack_vpc.id
+  }
+}
