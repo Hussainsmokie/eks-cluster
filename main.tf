@@ -187,13 +187,9 @@ resource "helm_release" "cluster_autoscaler" {
   chart      = "cluster-autoscaler"
   namespace  = "kube-system"
 
-  set {
+ set {
     name  = "autoDiscovery.clusterName"
-<<<<<<< HEAD
     value = aws_eks_cluster.nousath.name
-=======
-    value = aws_eks_cluster.devopsshack.name
->>>>>>> 895f931403b2461f7d21e53526f63559da862d7b
   }
 
   set {
