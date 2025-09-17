@@ -2,55 +2,55 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-resource "aws_vpc" "devopsshack_vpc" {
+resource "aws_vpc" "nousath_vpc" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
-    Name = "devopsshack-vpc"
+    Name = "nousath-vpc"
   }
 }
 
-resource "aws_subnet" "devopsshack_subnet" {
+resource "aws_subnet" "nousath_subnet" {
   count = 2
-  vpc_id                  = aws_vpc.devopsshack_vpc.id
-  cidr_block              = cidrsubnet(aws_vpc.devopsshack_vpc.cidr_block, 8, count.index)
+  vpc_id                  = aws_vpc.nousath_vpc.id
+  cidr_block              = cidrsubnet(aws_vpc.nousath_vpc.cidr_block, 8, count.index)
   availability_zone       = element(["ap-south-1a", "ap-south-1b"], count.index)
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "devopsshack-subnet-${count.index}"
+    Name = "nousath-subnet-${count.index}"
   }
 }
 
-resource "aws_internet_gateway" "devopsshack_igw" {
-  vpc_id = aws_vpc.devopsshack_vpc.id
+resource "aws_internet_gateway" "nousath_igw" {
+  vpc_id = aws_vpc.nousath_vpc.id
 
   tags = {
-    Name = "devopsshack-igw"
+    Name = "nousath-igw"
   }
 }
 
-resource "aws_route_table" "devopsshack_route_table" {
-  vpc_id = aws_vpc.devopsshack_vpc.id
+resource "aws_route_table" "nousath_route_table" {
+  vpc_id = aws_vpc.nousath_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.devopsshack_igw.id
+    gateway_id = aws_internet_gateway.nousath_igw.id
   }
 
   tags = {
-    Name = "devopsshack-route-table"
+    Name = "nousath-route-table"
   }
 }
 
 resource "aws_route_table_association" "a" {
   count          = 2
-  subnet_id      = aws_subnet.devopsshack_subnet[count.index].id
-  route_table_id = aws_route_table.devopsshack_route_table.id
+  subnet_id      = aws_subnet.nousath_subnet[count.index].id
+  route_table_id = aws_route_table.nousath_route_table.id
 }
 
-resource "aws_security_group" "devopsshack_cluster_sg" {
-  vpc_id = aws_vpc.devopsshack_vpc.id
+resource "aws_security_group" "nousath_cluster_sg" {
+  vpc_id = aws_vpc.nousath_vpc.id
 
   egress {
     from_port   = 0
@@ -60,12 +60,12 @@ resource "aws_security_group" "devopsshack_cluster_sg" {
   }
 
   tags = {
-    Name = "devopsshack-cluster-sg"
+    Name = "nousath-cluster-sg"
   }
 }
 
-resource "aws_security_group" "devopsshack_node_sg" {
-  vpc_id = aws_vpc.devopsshack_vpc.id
+resource "aws_security_group" "nousath_node_sg" {
+  vpc_id = aws_vpc.nousath_vpc.id
 
   ingress {
     from_port   = 0
@@ -82,25 +82,25 @@ resource "aws_security_group" "devopsshack_node_sg" {
   }
 
   tags = {
-    Name = "devopsshack-node-sg"
+    Name = "nousath-node-sg"
   }
 }
 
-resource "aws_eks_cluster" "devopsshack" {
-  name     = "devopsshack-cluster"
-  role_arn = aws_iam_role.devopsshack_cluster_role.arn
+resource "aws_eks_cluster" "nousath" {
+  name     = "nousath-cluster"
+  role_arn = aws_iam_role.nousath_cluster_role.arn
 
   vpc_config {
-    subnet_ids         = aws_subnet.devopsshack_subnet[*].id
-    security_group_ids = [aws_security_group.devopsshack_cluster_sg.id]
+    subnet_ids         = aws_subnet.nousath_subnet[*].id
+    security_group_ids = [aws_security_group.nousath_cluster_sg.id]
   }
 }
 
-resource "aws_eks_node_group" "devopsshack" {
-  cluster_name    = aws_eks_cluster.devopsshack.name
-  node_group_name = "devopsshack-node-group"
-  node_role_arn   = aws_iam_role.devopsshack_node_group_role.arn
-  subnet_ids      = aws_subnet.devopsshack_subnet[*].id
+resource "aws_eks_node_group" "nousath" {
+  cluster_name    = aws_eks_cluster.nousath.name
+  node_group_name = "nousath-node-group"
+  node_role_arn   = aws_iam_role.nousath_node_group_role.arn
+  subnet_ids      = aws_subnet.nousath_subnet[*].id
 
   scaling_config {
     desired_size = 3
@@ -112,11 +112,11 @@ resource "aws_eks_node_group" "devopsshack" {
 
   remote_access {
     ec2_ssh_key = var.ssh_key_name
-    source_security_group_ids = [aws_security_group.devopsshack_node_sg.id]
+    source_security_group_ids = [aws_security_group.nousath_node_sg.id]
   }
 }
 
-resource "aws_iam_role" "devopsshack_cluster_role" {
+resource "aws_iam_role" "nousath_cluster_role" {
   name = "devopsshack-cluster-role"
 
   assume_role_policy = <<EOF
@@ -135,13 +135,13 @@ resource "aws_iam_role" "devopsshack_cluster_role" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "devopsshack_cluster_role_policy" {
-  role       = aws_iam_role.devopsshack_cluster_role.name
+resource "aws_iam_role_policy_attachment" "nousath_cluster_role_policy" {
+  role       = aws_iam_role.nousath_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-resource "aws_iam_role" "devopsshack_node_group_role" {
-  name = "devopsshack-node-group-role"
+resource "aws_iam_role" "nousath_node_group_role" {
+  name = "nousath-node-group-role"
 
   assume_role_policy = <<EOF
 {
@@ -159,17 +159,76 @@ resource "aws_iam_role" "devopsshack_node_group_role" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "devopsshack_node_group_role_policy" {
-  role       = aws_iam_role.devopsshack_node_group_role.name
+resource "aws_iam_role_policy_attachment" "nousath_node_group_role_policy" {
+  role       = aws_iam_role.nousath_node_group_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess
 }
 
-resource "aws_iam_role_policy_attachment" "devopsshack_node_group_cni_policy" {
-  role       = aws_iam_role.devopsshack_node_group_role.name
+resource "aws_iam_role_policy_attachment" "nousath_node_group_cni_policy" {
+  role       = aws_iam_role.nousath_node_group_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
-resource "aws_iam_role_policy_attachment" "devopsshack_node_group_registry_policy" {
-  role       = aws_iam_role.devopsshack_node_group_role.name
+resource "aws_iam_role_policy_attachment" "nousath_node_group_registry_policy" {
+  role       = aws_iam_role.nousath_node_group_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
+
+resource "helm_release" "cluster_autoscaler" {
+  name       = "cluster-autoscaler"
+  repository = "https://kubernetes.github.io/autoscaler"
+  chart      = "cluster-autoscaler"
+  namespace  = "kube-system"
+
+  set {
+    name  = "autoDiscovery.clusterName"
+    value = aws_eks_cluster.nousath.name
+  }
+
+  set {
+    name  = "awsRegion"
+    value = "ap-south-1"
+  }
+
+  set {
+    name  = "rbac.create"
+    value = "true"
+  }
+
+  set {
+    name  = "image.tag"
+    value = "v1.29.0"
+  }
+}
+
+
+
+resource "helm_release" "aws_load_balancer_controller" {
+  name       = "aws-load-balancer-controller"
+  namespace  = "kube-system"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  version    = "1.6.2"
+
+  set {
+    name  = "clusterName"
+    value = aws_eks_cluster.nousath.name
+  }
+
+  set {
+    name  = "serviceAccount.create"
+    value = "true"
+  }
+
+  set {
+    name  = "region"
+    value = "ap-south-1"
+  }
+
+  set {
+    name  = "vpcId"
+    value = aws_vpc.nousath_vpc.id
+  }
 }
