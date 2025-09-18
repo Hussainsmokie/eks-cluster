@@ -103,9 +103,9 @@ resource "aws_eks_node_group" "nousath" {
   subnet_ids      = aws_subnet.nousath_subnet[*].id
 
   scaling_config {
-    desired_size = 3
-    max_size     = 3
-    min_size     = 3
+    desired_size = var.node_group_desired_size
+    max_size     = var.node_group_max_size
+    min_size     = var.node_group_min_size
   }
 
   instance_types = ["t2.medium"]
