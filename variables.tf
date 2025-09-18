@@ -4,6 +4,19 @@ variable "ssh_key_name" {
   default     = "hotstar"
 }
 
+
+variable "node_group_desired_size" {
+  default = 3
+}
+
+variable "node_group_max_size" {
+  default = 3
+}
+
+variable "node_group_min_size" {
+  default = 3
+}
+
 variable "autoscaler_image_tag" {
   default = "v1.29.0"
 }
